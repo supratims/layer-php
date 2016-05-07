@@ -1,4 +1,5 @@
 <?php
+require_once 'Layer.php';
 
 /**
  * Sample client to send message to Layer
@@ -15,7 +16,7 @@ $session_token = $layer->sessionToken($username);
 $chat_id = $layer->startConversation($session_token, $username);
 
 // Build your message
-$message = [];
+$message = '['.new date(DATE_RFC2822).'] Hello World !'; // Or read this from standard input
 
 // Send message to layer
 $layer->sendMessage($session_token, $chat_id, $message);

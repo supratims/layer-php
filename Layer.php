@@ -4,11 +4,21 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 
 class Layer {
-	
-	// @TODO: replace your own keys 
-	const APP_ID = 'layer:///apps/staging/<your app id here>';
+	// @TODO: replace your own keys here or put them in an ini file
+	private $app_id = '<your app id here>';
 	private $provider_id = '<your provider id>';
-	private $key_id = 'your key id';
+	private $key_id = '<your key id>';
+	private $private_key = 'Paste the entire key here ...';
+
+	public __construct(){
+		// Remove these lines below if you are not using keys.ini
+		$params = parse_ini_file("keys.ini");
+		$this->app_id = $params['app_id'];
+		$this->provider_id = $params['provider_id'];
+		$this->key_id = $params['key_id'];
+		$this->private_key = $params['private_key'];
+	}
+
 	// Returns a session token, required for all REST api requests to layer
 	public function sessionToken($user_id){
 
@@ -22,7 +32,7 @@ class Layer {
 				],
 				'body' => json_encode([
 					'identity_token' => $this->identityToken($user_id),
-					"app_id" => self::APP_ID,
+					"app_id" => $this->app_id,
 				]),
 			];
 			$response = $client->request('POST', null, $options);
@@ -187,11 +197,9 @@ class Layer {
 
 		$layerIdentityTokenProvider = new \Layer\LayerIdentityTokenProvider();
 
-		$layerIdentityTokenProvider->setProviderID("layer:///providers/".$this->provider_id);
-		$layerIdentityTokenProvider->setKeyID("layer:///keys/".$this->key_id);
-		$layerIdentityTokenProvider->setPrivateKey("-----BEGIN RSA PRIVATE KEY-----
-	<paste the entire private key here>
------END RSA PRIVATE KEY-----");
+		$layerIdentityTokenProvider->setProviderID($this->provider_id);
+		$layerIdentityTokenProvider->setKeyID($this->key_id);
+		$layerIdentityTokenProvider->setPrivateKey($this->private_key);
 
 		$identityToken = $layerIdentityTokenProvider->generateIdentityToken($user_id, $nonce);
 
