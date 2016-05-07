@@ -1,3 +1,4 @@
 vendor/
 composer.lock
 keys.ini
+private_key

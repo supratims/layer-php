@@ -10,13 +10,13 @@ class Layer {
 	private $key_id = '<your key id>';
 	private $private_key = 'Paste the entire key here ...';
 
-	public __construct(){
+	public function __construct(){
 		// Remove these lines below if you are not using keys.ini
 		$params = parse_ini_file("keys.ini");
 		$this->app_id = $params['app_id'];
 		$this->provider_id = $params['provider_id'];
 		$this->key_id = $params['key_id'];
-		$this->private_key = $params['private_key'];
+		$this->private_key = trim(file_get_contents('private_key'));
 	}
 
 	// Returns a session token, required for all REST api requests to layer
@@ -193,7 +193,7 @@ class Layer {
 		$json = json_decode($this->nonce(), true);
 		$nonce = $json['nonce'];
 
-		$user_id = $user_id ? $user_id : 'supratims';
+		$user_id = $user_id ? $user_id : 'test_user';
 
 		$layerIdentityTokenProvider = new \Layer\LayerIdentityTokenProvider();
 
